@@ -141,13 +141,51 @@ namespace Bangazon
 
 // MENU SELECTION 3 - ORDER A PRODUCT
                 else if (menuSelection == "3")
-                            {
-                                Console.Clear();
-                                Console.WriteLine("***** ORDER A PRODUCT *****\n");
+                {
+                    Console.Clear();
+                    Console.WriteLine("***** ORDER A PRODUCT *****\n");
 
-                                // display items available for order
+                    string displayInventoryList = @"SELECT IdProduct, Name, Price FROM Product";
+
+                    using (SqlConnection connection = new SqlConnection(bangazonPath))
+                    using (SqlCommand getCustList = new SqlCommand(displayInventoryList, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = getCustList.ExecuteReader())
+                        {
+                            // Check is the reader has any rows at all before starting to read.
+                            if (reader.HasRows)
+                            {
+                                // Read advances to the next row.
+                                while (reader.Read())
+                                {
+                                    Console.WriteLine("{0}. {1} {2}",
+                                        reader[0], reader[1], reader[2]);
+                                    
+                                }
                             }
-                            else if (menuSelection == "4")
+                        }
+                    }
+                    Console.WriteLine("7. BACK TO MAIN MENU");
+                    Console.Write("\nENTER NUMBER ONLY > ");
+                    int idProduct = Convert.ToInt32(Console.ReadLine());
+
+
+
+
+
+                }
+
+
+
+
+
+
+
+
+
+
+                else if (menuSelection == "4")
                             {
                                 Console.Clear();
                                 Console.WriteLine("\nYOU ENTERED {0}.COMPLETE AN ORDER");
