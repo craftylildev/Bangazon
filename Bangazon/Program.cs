@@ -16,6 +16,10 @@ namespace Bangazon
             bool programEnded = false;
             string bangazonPath = "Data Source = (LocalDB)\\MSSQLLocalDB; AttachDbFilename = \"C:\\Users\\jen solima\\documents\\visual studio 2015\\Projects\\Bangazon\\Bangazon\\BangazonDatabase.mdf\"; Integrated Security = True";
 
+            List<int> orderList = new List<int>();
+            int orderChoice;
+
+
             while (!programEnded)
             {
                 Console.Clear();
@@ -34,13 +38,12 @@ namespace Bangazon
 
                 string menuSelection = Console.ReadKey().KeyChar.ToString();
 
-// MENU SELECTION 1 - CREATE AN ACCOUNT
+                // MENU SELECTION 1 - CREATE AN ACCOUNT
+                #region          
                 if (menuSelection == "1")
                 {
                     Console.Clear();
                     Console.WriteLine("***** CREATE AN ACCOUNT *****\n");
-                    //Console.Write("ENTER ID >");
-                    //string customerId = Console.ReadLine();
                     Console.Write("ENTER FIRST NAME > ");
                     string firstName = Console.ReadLine();
                     Console.Write("ENTER LAST NAME > ");
@@ -77,8 +80,10 @@ namespace Bangazon
                     Console.ReadKey();
 
                 }
+                #endregion
 
-// MENU SELECTION 2 - CREATE A PAYMENT OPTION
+                // MENU SELECTION 2 - CREATE A PAYMENT OPTION
+                #region
                 else if (menuSelection == "2")
                 {
                     Console.Clear();
@@ -136,101 +141,107 @@ namespace Bangazon
                     Console.WriteLine("\nPAYMENT * {0} {1} * ADDED", paymentName, accountNumber);
                     Console.WriteLine("PRESS ANY KEY TO RETURN TO MAIN MENU");
                     Console.ReadKey();
-
                 }
+                #endregion
 
-// MENU SELECTION 3 - ORDER A PRODUCT
+                // MENU SELECTION 3 - ORDER A PRODUCT
+                #region
                 else if (menuSelection == "3")
                 {
-                    Console.Clear();
-                    Console.WriteLine("***** ORDER A PRODUCT *****\n");
-
-                    string displayInventoryList = @"SELECT IdProduct, Name, Price FROM Product";
-
-                    using (SqlConnection connection = new SqlConnection(bangazonPath))
-                    using (SqlCommand getCustList = new SqlCommand(displayInventoryList, connection))
+                    bool orderMenuVisible = true;
+                    while (orderMenuVisible)
                     {
-                        connection.Open();
-                        using (SqlDataReader reader = getCustList.ExecuteReader())
+                        Console.Clear();
+                        Console.WriteLine("***** ORDER A PRODUCT *****\n");
+
+                        string displayInventoryList = @"SELECT IdProduct, Name, Price FROM Product";
+
+                        using (SqlConnection connection = new SqlConnection(bangazonPath))
+                        using (SqlCommand getCustList = new SqlCommand(displayInventoryList, connection))
                         {
-                            // Check is the reader has any rows at all before starting to read.
-                            if (reader.HasRows)
+                            connection.Open();
+                            using (SqlDataReader reader = getCustList.ExecuteReader())
                             {
-                                // Read advances to the next row.
-                                while (reader.Read())
+                                // Check is the reader has any rows at all before starting to read.
+                                if (reader.HasRows)
                                 {
-                                    Console.WriteLine("{0}. {1} {2}",
-                                        reader[0], reader[1], reader[2]);
-                                    
+                                    // Read advances to the next row.
+                                    while (reader.Read())
+                                    {
+                                        Console.WriteLine("{0}. {1} {2}",
+                                            reader[0], reader[1], reader[2]);
+                                    }
                                 }
                             }
                         }
+                        Console.WriteLine("7. BACK TO MAIN MENU");
+                        Console.Write("\nENTER NUMBER ONLY > ");
+                        
+                        orderChoice = Convert.ToInt32(Console.ReadLine());
+                        if (orderChoice <= 6)
+                        {
+                            orderList.Add(orderChoice);
+                            Console.WriteLine("Item {0} added to order.", orderChoice);
+                            Console.ReadKey();
+                        }
+                        else if (orderChoice == 7)
+                        {
+                            orderMenuVisible = false;
+                        }
                     }
-                    Console.WriteLine("7. BACK TO MAIN MENU");
-                    Console.Write("\nENTER NUMBER ONLY > ");
-                    int idProduct = Convert.ToInt32(Console.ReadLine());
+                }
+                #endregion
+
+                // MENU SELECTION 4 - COMPLETE AN ORDER
+
+                else if (menuSelection == "4")
+                {
+                    Console.Clear();
+                    if (orderList.Count == 0)
+                    {
+                        Console.WriteLine("PLEASE ADD ITEMS TO YOUR ORDER");
+                        Console.WriteLine("PRESS ENTER TO RETURN TO MENU");
+                        Console.ReadKey();
+                    }
+                    else
+                    {
+                        Console.ReadKey();
+                   
 
 
 
 
 
+
+
+
+
+                    }
+                    
                 }
 
 
+                
 
 
+                else if (menuSelection == "5")
+                {
+                    Console.Clear();
+                    Console.WriteLine("\nYOU ENTERED {0}.SEE PRODUCT POPULARITY");
+                }
+                else if (menuSelection == "6")
+                {
+                    programEnded = true;
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("PLEASE SELECT FROM MENU");
+                }
+                           
 
-
-
-
-
-
-                else if (menuSelection == "4")
-                            {
-                                Console.Clear();
-                                Console.WriteLine("\nYOU ENTERED {0}.COMPLETE AN ORDER");
-                            }
-                            else if (menuSelection == "5")
-                            {
-                                Console.Clear();
-                                Console.WriteLine("\nYOU ENTERED {0}.SEE PRODUCT POPULARITY");
-                            }
-                            else if (menuSelection == "6")
-                            {
-                                programEnded = true;
-                                break;
-                            }
-                            else
-                            {
-                                Console.WriteLine("PLEASE SELECT FROM MENU");
-                            }
-                            //using (SqlConnection connection = new SqlConnection("Data Source = (LocalDB)\\MSSQLLocalDB; AttachDbFilename = \"C:\\Users\\Jen Solima\\documents\\visual studio 2015\\Projects\\Bangazon\\Bangazon\\BangazonDatabase.mdf\"; Integrated Security = True"))
-                            //using (SqlCommand cmd = new SqlCommand(query, connection))
-                            //{
-                            //    connection.Open();
-                            //    using (SqlDataReader reader = cmd.ExecuteReader())
-                            //    {
-                            //        // Check is the reader has any rows at all before starting to read.
-                            //        if (reader.HasRows)
-                            //        {
-                            //            // Read advances to the next row.
-                            //            while (reader.Read())
-                            //            {
-                            //                Console.WriteLine("test");
-                            //            }
-
-                            //        }
-                            //    }
-                            //}
-
-
-                            // Console.ReadLine();
-
-                        }
-
-
-
-             
-        }
-    }
-}
+            } // END WHILE PROGRAMENDED
+            
+        } // END MAIN
+    } // END PROGRAM
+} // END NAMESPACE
