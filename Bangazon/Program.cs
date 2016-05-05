@@ -226,25 +226,10 @@ namespace Bangazon
                         Console.Clear();
                         Console.WriteLine("***** ORDER A PRODUCT *****\n");
 
-                        string displayInventoryList = @"SELECT IdProduct, Name, Price FROM Product";
 
-                        using (SqlConnection connection = new SqlConnection(bangazonPath))
-                        using (SqlCommand getProdList = new SqlCommand(displayInventoryList, connection))
+                        foreach (Product p in allProducts)
                         {
-                            connection.Open();
-                            using (SqlDataReader reader = getProdList.ExecuteReader())
-                            {
-                                // Check is the reader has any rows at all before starting to read.
-                                if (reader.HasRows)
-                                {
-                                    // Read advances to the next row.
-                                    while (reader.Read())
-                                    {
-                                        Console.WriteLine("{0}. {1} {2}",
-                                            reader[0], reader[1], reader[2]);
-                                    }
-                                }
-                            }
+                            Console.WriteLine("{0}. {1} {2}", p.IdProduct, p.Name, p.Price);
                         }
                         Console.WriteLine("7. BACK TO MAIN MENU");
                         Console.Write("\nENTER NUMBER ONLY > ");
@@ -268,6 +253,7 @@ namespace Bangazon
                 #endregion
 
                 // MENU SELECTION 4 - COMPLETE AN ORDER
+                #region
                 else if (menuSelection == "4")
                 {
                     Console.Clear();
@@ -392,21 +378,49 @@ namespace Bangazon
                         }
                     }
                 }
-
+                #endregion
 
                 // MENU SELECTION 5 - SEE PRODUCT POPULARITY
+                #region
                 else if (menuSelection == "5")
                 {
                     Console.Clear();
+                    Console.WriteLine("***** SEE PRODUCT POPULARITY *****\n");
+                    string query = @"
+                        SELECT
+                          p.Name,
+                          COUNT(op.IdProduct),
+                          COUNT(DISTINCT co.IdCustomer),
+                          SUM(p.Price)
+                        FROM Product p
+                        INNER JOIN OrderProducts op ON op.IdProduct = p.IdProduct 
+                        INNER JOIN CustomerOrder co ON co.IdOrder = op.IdOrder
+                        GROUP BY p.Name
+                    ";
 
-                    foreach ()
-                    { }
-                    //p.Name ordered COUNT(IdProduct) times by COUNT(IdCustomer) customers for total revenue of SUM(p.Price).
+                    using (SqlConnection connection = new SqlConnection(bangazonPath))
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            // Check is the reader has any rows at all before starting to read.
+                            if (reader.HasRows)
+                            {
+                                // Read advances to the next row.
+                                while (reader.Read())
+                                {
+                                    Console.WriteLine("{0} ordered {1} times by {2} customers for total revenue of ${3}.",
+                                        reader[0], reader[1], reader[2], reader[3]);
+                                }
 
-
-
+                            }
+                        }
+                    }
+                    Console.WriteLine("\n\nPRESS ANY KEY TO RETURN TO THE MAIN MENU");
                     Console.ReadKey();
                 }
+                #endregion
 
                 // MENU SELECTION 6 - LEAVE BANGAZON
                 else if (menuSelection == "6")
