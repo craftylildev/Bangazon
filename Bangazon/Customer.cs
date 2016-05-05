@@ -16,32 +16,16 @@ namespace Bangazon
         public string PostalCode { get; set; }
         public string Phone { get; set; }
 
-        //Create Customer
-
-
-        //Enter customer name
-        //>
-
-        //Enter street address
-        //>
-
-        //Enter city
-        //>
-
-        //Enter state
-        //>
-
-        //Enter postal code
-        //>
-
-        //Enter phone number
-        //>
-
-
-
-        //Create payment option
-        //Order a product
-
-
+        public Customer(int idCustomer, string firstName, string lastName, string address, string state, string postalCode, string phone)
+        {
+            this.IdCustomer = idCustomer;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.Address = address;
+            this.State = state;
+            this.PostalCode = postalCode;
+            this.Phone = phone;
+        }
+       
     }
 }
