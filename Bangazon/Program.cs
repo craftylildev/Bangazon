@@ -149,6 +149,29 @@ namespace Bangazon
                     cmd.ExecuteNonQuery();
                     sqlConnection1.Close();
                     Console.WriteLine("\nCUSTOMER * {0} {1} * ADDED", firstName, lastName);
+                    //reload all customers list
+                    allCustomers = new List<Customer>();
+                    queryAllCustomers = @"SELECT IdCustomer, FirstName, LastName, Address, State, PostalCode, Phone FROM Customer";
+                    using (SqlConnection connection = new SqlConnection(bangazonPath))
+                    using (SqlCommand getCustomerList = new SqlCommand(queryAllCustomers, connection))
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = getCustomerList.ExecuteReader())
+                        {
+                            // Check is the reader has any rows at all before starting to read.
+                            if (reader.HasRows)
+                            {
+                                // Read advances to the next row.
+                                while (reader.Read())
+                                {
+                                    Customer c = new Customer(reader[0] as int? ?? 0, reader[1] as string, reader[2] as string, reader[3] as string, reader[4] as string, reader[5] as string, reader[6] as string);
+                                    allCustomers.Add(c);
+
+                                }
+                            }
+                        }
+                    }
+
                     Console.WriteLine("PRESS ANY KEY TO RETURN TO MAIN MENU");
                     Console.ReadKey();
 
@@ -283,7 +306,7 @@ namespace Bangazon
                             {
                                 Console.WriteLine("{0}. {1} {2}", c.IdCustomer, c.FirstName, c.LastName);
                             }
-                            Console.WriteLine("\nENTER NUMBER ONLY > ");
+                            Console.Write("\nENTER NUMBER ONLY > ");
                             int selectCustomer = Convert.ToInt32(Console.ReadLine());
                             
                             string queryPaymentOption = @"SELECT IdPaymentOption, Name FROM PaymentOption WHERE IdCustomer = " + selectCustomer;
