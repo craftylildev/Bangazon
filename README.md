@@ -1,5 +1,5 @@
 # Bangazon
-Exercise allowing a user to interact with a basic product ordering database. [See Original Instructions] (https://github.com/craftylildev/Bangazon/blob/initialSetup/OriginalInstructions.md)
+Exercise allowing a user to interact with a basic product ordering database. [See Original Instructions] (https://github.com/craftylildev/Bangazon/blob/master/OriginalInstructions.md)
 
 ERD I created in [draw.io](http://draw.io) :
 
